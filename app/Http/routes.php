@@ -25,5 +25,6 @@
 
 Route::group(['middleware' => ['api']], function () {
     Route::post('/user/register', 'Users\UserProfile@register');
+    Route::post('/userProfile/userSons', 'Users\UserProfile@addMoney');
 
 });
