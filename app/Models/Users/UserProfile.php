@@ -31,6 +31,11 @@ class UserProfile extends Model
 
         return self::where('id' , $id)->whereNull('deleted_at')->first();
     }
-    
+
+
+    public static function login($params)
+    {
+        return self::where($params)->whereNull('deleted_at')->first()->toArray();
+    }
 
 }

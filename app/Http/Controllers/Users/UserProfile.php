@@ -13,6 +13,55 @@ use Validator;
 class UserProfile extends Controller
 {
     public  $temp = [];
+
+    public function login(Request $request)
+    {
+
+        $messages = [
+            'username.required' => '请输入手机号。',
+            'password.required' => '请输入密码。',
+        ];
+
+        $rules= [
+            'username' => 'required',
+            'password' => 'required',
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $messages);
+
+        if ($validator->fails()) {
+            return \Response::json(
+                [
+                    'status' => -1,
+                    'message' => $validator->errors()->first()
+                ]
+            );
+        }
+
+        $params['username']     =  $request->input('username');
+        $params['password']     =  md5(md5($request->input('password')));
+
+        if ($userInfo = User::login($params))
+        {
+            return \Response::json(
+                [
+                    'status' => 1,
+                    'results' => $userInfo
+                ]
+            );
+
+        }else{
+            return \Response::json(
+                [
+                    'status' => -1,
+                    'message' => '账号密码错误'
+                ]
+            );
+        }
+
+    }
+
+
     public function register(Request $request)
     {
         $messages = [
