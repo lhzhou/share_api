@@ -3,49 +3,39 @@
 namespace App\Http\Controllers\Users;
 
 use App\Models\Admin\SplitModel;
+use App\Models\Users\WalletModel;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use App\Models\Users\UserProfile AS User;
+use App\Models\Users\AccountModel;
 use Validator;
 
-class UserProfile extends Controller
+class AccountController extends Controller
 {
     public  $temp = [];
 
     public function login(Request $request)
     {
 
-        $messages = [
-            'username.required' => '请输入手机号。',
-            'password.required' => '请输入密码。',
-        ];
 
         $rules= [
-            'username' => 'required',
+            'mobile' => 'required',
             'password' => 'required',
         ];
 
-        $validator = Validator::make($request->all(), $rules, $messages);
+        $this->validate($request, $rules);
 
-        if ($validator->fails()) {
-            return \Response::json(
-                [
-                    'status' => -1,
-                    'message' => $validator->errors()->first()
-                ]
-            );
-        }
 
-        $params['username']     =  $request->input('username');
+
+        $params['mobile']     =  $request->input('mobile');
         $params['password']     =  md5(md5($request->input('password')));
 
-        if ($userInfo = User::login($params))
+        if ($userInfo = AccountModel::login($params))
         {
             return \Response::json(
                 [
-                    'status' => 1,
+                    'status' => 0,
                     'results' => $userInfo
                 ]
             );
@@ -64,31 +54,19 @@ class UserProfile extends Controller
 
     public function register(Request $request)
     {
-        $messages = [
-            'username.required' => '请输入用户名。',
-            'password.required' => '请输入密码。',
-            'full_name.required' => '请输入姓名'
-        ];
+
 
         $rules= [
-            'username' => 'required|alpha_dash',
+            'mobile' => 'required|alpha_dash',
             'password' => 'required',
             'full_name' => 'required',
         ];
 
-        $validator = Validator::make($request->all(), $rules, $messages);
-
-        if ($validator->fails()) {
-            return \Response::json(
-                [
-                    'status' => -1,
-                    'message' => $validator->errors()->all()
-                ]
-            );
-        }
+        $this->validate($request, $rules);
 
 
-        if (User::checkUserName($request->input('username')))
+
+        if (AccountModel::checkUserName($request->input('mobile')))
         {
             return \Response::json(
                 [
@@ -100,17 +78,19 @@ class UserProfile extends Controller
         }
 
 
-        $params['username']     =  $request->input('username');
+        $params['mobile']     =  $request->input('mobile');
         $params['password']     =  md5(md5($request->input('password')));
         $params['full_name']    =  $request->input('full_name');
-        $params['pid']          =  $request->input('pid');
+        $params['pid']          =  ($request->input('pid'))? $request->input('pid') : 0;
 
-
-         if (User::create($params))
+         if ($results = AccountModel::create($params))
          {
+             WalletModel::create(['u_id' => $results->id]);
+
              return \Response::json(
                  [
-                     'status' => 1,
+                     'status' => 0,
+                     'results' => $results,
                      'message' => '账号创建成功'
                  ]
              );
@@ -136,7 +116,7 @@ class UserProfile extends Controller
         $user = $sonData;
 
 
-        while ($sonData = User::getUserInfo($sonData->pid)) {
+        while ($sonData = AccountModel::getUserInfo($sonData->pid)) {
             if ($i >= 4)
                 break;
             $son["lv$i"] = $sonData;

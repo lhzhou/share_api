@@ -24,8 +24,15 @@
 */
 
 Route::group(['middleware' => ['api']], function () {
-    Route::post('/user/register', 'Users\UserProfile@register');
-    Route::post('/userProfile/userSons', 'Users\UserProfile@addMoney');
-    Route::post('/user/login', 'Users\UserProfile@login');
+    Route::post('/Account/Register', 'Users\AccountController@register');
+
+    Route::post('/Account/Login', 'Users\AccountController@login');
+    Route::post('/Wallet/Balance', 'Users\WalletController@balance');
+    Route::post('/Wallet/Withdrawals', 'Users\WalletController@withdrawals');
+    Route::post('/Wallet/Withdrawals/Log', 'Users\WalletController@withdrawalsLog');
+
+    Route::post('/Wallet/Increase', 'Users\WalletController@increase');
+
+
 
 });

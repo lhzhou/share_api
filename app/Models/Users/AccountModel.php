@@ -4,18 +4,19 @@ namespace App\Models\Users;
 
 use Illuminate\Database\Eloquent\Model;
 
-class UserProfile extends Model
+class AccountModel extends Model
 {
-    protected   $table = 'user_profile';
+    protected   $table = 'account';
 
-    protected   $fillable = ['username' , 'password' , 'full_name' , 'pid'];
+    protected   $fillable = ['mobile' , 'password' , 'full_name' , 'pid'];
 
     protected   $dateFormat = 'U';
 
 
-    public static function checkUserName($username)
+    
+    public static function checkUserName($mobile)
     {
-        return self::where('username' , $username)->whereNull('deleted_at')->count();
+        return self::where('mobile' , $mobile)->whereNull('deleted_at')->count();
 
     }
 
@@ -35,7 +36,7 @@ class UserProfile extends Model
 
     public static function login($params)
     {
-        return self::where($params)->whereNull('deleted_at')->first()->toArray();
+        return self::where($params)->whereNull('deleted_at')->first();
     }
 
 }
