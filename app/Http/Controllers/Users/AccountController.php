@@ -59,7 +59,6 @@ class AccountController extends Controller
         $rules= [
             'mobile' => 'required|alpha_dash',
             'password' => 'required',
-            'full_name' => 'required',
         ];
 
         $this->validate($request, $rules);
@@ -70,7 +69,7 @@ class AccountController extends Controller
         {
             return \Response::json(
                 [
-                    'status' => 1,
+                    'status' => -1,
                     'message' => '登录账号已经存在'
                 ]
             );
@@ -80,7 +79,7 @@ class AccountController extends Controller
 
         $params['mobile']     =  $request->input('mobile');
         $params['password']     =  md5(md5($request->input('password')));
-        $params['full_name']    =  $request->input('full_name');
+//        $params['full_name']    =  $request->input('full_name');
         $params['pid']          =  ($request->input('pid'))? $request->input('pid') : 0;
 
          if ($results = AccountModel::create($params))

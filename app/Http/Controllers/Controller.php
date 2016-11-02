@@ -16,7 +16,7 @@ class Controller extends BaseController
     protected function formatValidationErrors(Validator $validator)
     {
         $result = [
-            'code' => -1,
+            'stauts' => -1,
             'message' => '验证失败',
             'errors' => [],
         ];

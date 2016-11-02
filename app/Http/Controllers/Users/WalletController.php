@@ -41,11 +41,12 @@ class WalletController extends Controller
             'alipay_account' => 'required',
             'alipay_name' => 'required',
             'user_id' => 'required',
+            'ip' => 'required',
         ];
 
         $this->validate($request, $rules);
 
-        $params =  $request->only('amount','alipay_account' , 'alipay_name');
+        $params =  $request->only('amount','alipay_account' , 'alipay_name','ip');
         $params['created_by'] =$request->input('user_id');
 
         if (WithdrawalsModel::create($params)){
@@ -55,7 +56,7 @@ class WalletController extends Controller
             ];
         }else{
             $arr =  [
-                'status' => 0,
+                'status' => -1,
                 'message' =>  '体现申请失败'
             ];
         }
@@ -73,7 +74,7 @@ class WalletController extends Controller
 
         $params['created_by'] =  $request->input('user_id');
 
-        if ($results = WithdrawalsModel::where($params)->orderBy('id' , 'DESC')->get() ){
+        if ($results = WithdrawalsModel::where($params)->orderBy('id' , 'DESC')->paginate(20) ){
             $arr =  [
                 'status' => 0,
                 'results' => $results
