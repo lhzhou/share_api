@@ -27,10 +27,12 @@ Route::group(['middleware' => ['api']], function () {
     Route::post('/Account/Register', 'Users\AccountController@register');
 
     Route::post('/Account/Login', 'Users\AccountController@login');
+    Route::post('/Account/Info', 'Users\AccountController@info');
+    Route::post('/Account/ChangePassword', 'Users\AccountController@changePassword');
+
     Route::post('/Wallet/Balance', 'Users\WalletController@balance');
     Route::post('/Wallet/Withdrawals', 'Users\WalletController@withdrawals');
     Route::post('/Wallet/Withdrawals/Log', 'Users\WalletController@withdrawalsLog');
-
     Route::post('/Wallet/Increase', 'Users\WalletController@increase');
 
 

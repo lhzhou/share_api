@@ -103,6 +103,58 @@ class AccountController extends Controller
          }
     }
 
+    public function info(Request $request)
+    {
+        $rules= [
+            'user_id' => 'required|alpha_dash',
+        ];
+
+        $this->validate($request, $rules);
+
+
+        if ($results = AccountModel::find($request->user_id))
+        {
+            $arr = [
+                'status' => 0,
+                'results' => $results,
+            ];
+        }else{
+            $arr = [
+                'status' => -1,
+                'message' => '获取账号资料失败',
+            ];
+        }
+
+
+        return \Response::json($arr);
+    }
+
+    public function changePassword(Request $request)
+    {
+        $rules= [
+            'user_id' => 'required|alpha_dash',
+        ];
+
+        $this->validate($request, $rules);
+
+
+        if ($results = AccountModel::find($request->user_id))
+        {
+            $arr = [
+                'status' => 0,
+                'results' => $results,
+            ];
+        }else{
+            $arr = [
+                'status' => -1,
+                'message' => '获取账号资料失败',
+            ];
+        }
+
+
+        return \Response::json($arr);
+    }
+
 
     public function addMoney($userId = '8', $articleId = '')
     {
