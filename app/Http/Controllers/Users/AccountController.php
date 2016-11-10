@@ -112,7 +112,7 @@ class AccountController extends Controller
         $this->validate($request, $rules);
 
 
-        if ($results = AccountModel::find($request->user_id))
+        if ($results = AccountModel::where('id' , $request->user_id)->first())
         {
             $arr = [
                 'status' => 0,
@@ -138,7 +138,7 @@ class AccountController extends Controller
         $this->validate($request, $rules);
 
 
-        if ($results = AccountModel::find($request->user_id))
+        if ($results = AccountModel::where('id' , $request->user_id)->first())
         {
             $arr = [
                 'status' => 0,
@@ -155,6 +155,31 @@ class AccountController extends Controller
         return \Response::json($arr);
     }
 
+
+    public function lower(Request $request)
+    {
+        $results = AccountModel::where('pid', $request->input('user_id'))
+            ->whereNull('deleted_at')
+            ->orderBy('id', 'desc')
+            ->paginate(20);
+
+        if ($results )
+        {
+            $arr = [
+                'status' => 0,
+                'results' => $results,
+            ];
+        }else{
+            $arr = [
+                'status' => -1,
+                'message' => '获取账号资料失败',
+            ];
+        }
+
+        return \Response::json($arr);
+
+
+    }
 
     public function addMoney($userId = '8', $articleId = '')
     {

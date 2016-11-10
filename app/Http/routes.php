@@ -28,6 +28,9 @@ Route::group(['middleware' => ['api']], function () {
 
     Route::post('/Account/Login', 'Users\AccountController@login');
     Route::post('/Account/Info', 'Users\AccountController@info');
+
+    Route::post('/Account/Lower', 'Users\AccountController@lower');
+
     Route::post('/Account/ChangePassword', 'Users\AccountController@changePassword');
 
     Route::post('/Wallet/Balance', 'Users\WalletController@balance');
